@@ -1,4 +1,4 @@
 src/main/resources/config.properties
-src/main/resources/config_copy.properties
+
 base.sql
 target/
