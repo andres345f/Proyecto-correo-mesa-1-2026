@@ -1,0 +1,157 @@
+================================================================================
+  PRUEBA DE FLUJO COMPLETO - SISTEMA DE GESTIÓN ACADÉMICA
+================================================================================
+Enviar cada comando en un email separado a: sistema@example.com
+Los IDs pueden variar según el orden de ejecución — ajustar si es necesario.
+
+==============================================================================
+PASO 1: CREAR AULA
+==============================================================================
+CREATEAULAS[Aula 101, A101, 30]
+
+==============================================================================
+PASO 2: CREAR OFERTA ACADÉMICA (CARRERA)
+==============================================================================
+CREATEOFERTAS[Ingeniería de Sistemas, SIS, Carrera de Ingeniería de Sistemas]
+
+==============================================================================
+PASO 3: CREAR PERIODO ACADÉMICO
+==============================================================================
+CREATEPERIODOS[1, 2026-2, SEMESTRAL, 2026-07-01, 2026-12-30]
+
+==============================================================================
+PASO 4: CREAR MATERIA
+==============================================================================
+CREATEMATERIAS[INF101, Programación I, Introducción a la programación]
+
+==============================================================================
+PASO 5: CREAR MALLA CURRICULAR (asocia materia a oferta en un semestre)
+==============================================================================
+CREATEMALLA[1, 1, 1]
+
+==============================================================================
+PASO 6: CREAR PRERREQUISITO (opcional, si tiene prerrequisitos)
+==============================================================================
+CREATEPREREQUISITOS[1, 1]
+
+==============================================================================
+PASO 7: CREAR GRUPO
+==============================================================================
+CREATEGRUPOS[Grupo A, 1]
+
+==============================================================================
+PASO 8: ASIGNAR GRUPO A PERIODO CON DOCENTE (cupo 35)
+==============================================================================
+CREATEGRUPOPERIODOS[1, 1, 35, ]    ← docenteId vacío si no hay docente aún
+
+==============================================================================
+PASO 9: CREAR HORARIO
+==============================================================================
+CREATEHORARIOS[1, LUNES, 08:00, 10:00, 1]
+
+==============================================================================
+PASO 10: CREAR PLAN DE PAGO
+  - Monto matrícula: 500
+  - Monto cuota mensual: 300
+  - Cantidad de cuotas: 6
+==============================================================================
+CREATEPLANESPAGO[1, Plan Estandar, MENSUAL, 500, 300, 6]
+
+==============================================================================
+PASO 11: CREAR USUARIO DOCENTE
+==============================================================================
+CREATEUSUARIOS[Carlos Profesor, carlos@email.com, pass123]
+
+==============================================================================
+PASO 12: CREAR ESTUDIANTE (con isEstudiante=true por defecto)
+==============================================================================
+CREATEESTUDIANTES[Juan Perez, juan@email.com, pass123, EST-001]
+
+==============================================================================
+PASO 13: LISTAR USUARIOS PARA VER LOS IDs
+==============================================================================
+LISTARUSUARIOS[*]
+
+==============================================================================
+PASO 14: LISTAR OFERTAS Y PERIODOS PARA VER LOS IDs
+==============================================================================
+LISTAROFERTAS[*]
+LISTARPERIODOS[*]
+
+==============================================================================
+PASO 15: MATRICULAR ESTUDIANTE EN CARRERA (usuarioId, ofertaId)
+  Asume: Juan Perez = usuario 2, Ing. Sistemas = oferta 1
+==============================================================================
+CREATEMATRICARRERAS[2, 1]
+
+==============================================================================
+PASO 16: INSCRIBIR EN PERIODO (matriculaCarreraId, periodoId, planPagoId)
+  ⚡ ESTO GENERA LAS CUOTAS AUTOMÁTICAMENTE:
+     - 1 cuota de Matrícula ($500) con vencimiento en 1 mes
+     - 6 cuotas mensuales ($300 c/u) con vencimiento mes a mes
+==============================================================================
+CREATEMATRICPERIODOS[1, 1, 1]
+
+==============================================================================
+PASO 17: VER LAS CUOTAS GENERADAS AUTOMÁTICAMENTE
+  Deberías ver: 1 Matrícula + 6 cuotas mensuales = 7 cuotas en total
+==============================================================================
+LISTARCUOTAS[*]
+
+==============================================================================
+PASO 18: INSCRIBIR ALUMNO EN GRUPO (matriculaPeriodoId, grupoPeriodoId)
+==============================================================================
+CREATEINSCRIPCIONES[1, 1]
+
+==============================================================================
+PASO 19: VERIFICAR INSCRIPCIÓN
+==============================================================================
+LISTARINSCRIPCIONES[*]
+
+================================================================================
+  EJEMPLO DE RESPUESTA ESPERADA (PASO 16)
+================================================================================
+Matrícula de periodo creada: ID=1, MatCarreraID=1, PeriodoID=1,
+PlanPagoID=1, Estado=activo
+
+📋 7 cuotas generadas automáticamente por un total de $2300
+
+  - Cuota 1: Matrícula    $500  Vence: 2026-08-20
+  - Cuota 2: Cuota 1      $300  Vence: 2026-09-20
+  - Cuota 3: Cuota 2      $300  Vence: 2026-10-20
+  - Cuota 4: Cuota 3      $300  Vence: 2026-11-20
+  - Cuota 5: Cuota 4      $300  Vence: 2026-12-20
+  - Cuota 6: Cuota 5      $300  Vence: 2027-01-20
+  - Cuota 7: Cuota 6      $300  Vence: 2027-02-20
+
+================================================================================
+  COMANDOS ADICIONALES PARA PRUEBAS
+================================================================================
+
+# PAGAR UNA CUOTA (toma monto de la cuota y genera QR automáticamente)
+CREATEPAGOS[1]
+
+# VER PAGOS
+LISTARPAGOS[*]
+
+# CALIFICAR ALUMNO
+UPDATEINSCRIPCIONES[1, 85]
+
+# VER INSCRIPCIÓN CON NOTA
+GETINSCRIPCIONES[1]
+
+# CREAR TAREA
+CREATETAREAS[1, Examen Final, Examen escrito, 2026-12-15T10:00:00, 100]
+
+# ENTREGAR TAREA
+CREATEENTREGAS[1, 2, tareas/examen1.pdf]
+
+# CALIFICAR ENTREGA
+UPDATEENTREGAS[1, 90, Buen trabajo]
+
+================================================================================
+  NOTAS
+================================================================================
+- Los IDs asumen ejecución secuencial desde 1. Si ya hay datos en BD,
+  usar LISTAR* para obtener los IDs reales y ajustar.
+- HELP muestra el listado completo de comandos disponibles.
