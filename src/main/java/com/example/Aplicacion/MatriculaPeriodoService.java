@@ -56,7 +56,7 @@ public class MatriculaPeriodoService {
                     totalCuotas = totalCuotas.add(plan.getMontoCuota());
                     String montoCuotaStr = plan.getMontoCuota().stripTrailingZeros().toPlainString();
                     detalleCuotas.append("<tr><td>").append(cuota.getId()).append("</td><td>Cuota ").append(i)
-                        .append("</td><td>$").append(montoCuotaStr).append("</td><td>")
+                        .append("</td><td>BOB").append(montoCuotaStr).append("</td><td>")
                         .append(baseDate.plusMonths(1 + i)).append("</td></tr>\n");
                 }
             }
