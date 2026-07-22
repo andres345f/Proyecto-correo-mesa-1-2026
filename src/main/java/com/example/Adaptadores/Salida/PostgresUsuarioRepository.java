@@ -29,6 +29,27 @@ public class PostgresUsuarioRepository implements IUsuarioRepository {
     }
 
     @Override
+    public void guardarEstudiante(Usuario usuario) throws Exception {
+        String sql = "INSERT INTO users (name, email, password, is_estudiante, codigo_estudiante, is_activo) VALUES (?, ?, ?, true, ?, ?);";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, usuario.getName());
+            ps.setString(2, usuario.getEmail());
+            ps.setString(3, usuario.getPassword());
+            ps.setString(4, usuario.getCodigoEstudiante());
+            ps.setBoolean(5, usuario.isActivo());
+            ps.executeUpdate();
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    usuario.setId(generatedKeys.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            throw new Exception("Error al guardar estudiante: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
     public void actualizar(Usuario usuario) throws Exception {
         String sql = "UPDATE users SET name = ?, email = ?, password = ?, is_propietario = ?, is_director = ?, " +
                      "is_secretaria = ?, is_profesor = ?, is_estudiante = ?, codigo_estudiante = ?, is_activo = ? WHERE id = ?;";

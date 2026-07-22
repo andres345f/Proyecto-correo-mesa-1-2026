@@ -239,6 +239,7 @@ public class PagoFacilGateway {
 
         HttpResponse<String> response = enviarPeticionConRetry(request, 2, "generate-qr");
         String json = response.body();
+        System.out.println("PagoFacilGateway: generate-qr response: " + json);
         
         // El QR puede venir en "qrImage" o "qrBase64"
         String qrBase64 = extractJsonString(json, "qrImage");

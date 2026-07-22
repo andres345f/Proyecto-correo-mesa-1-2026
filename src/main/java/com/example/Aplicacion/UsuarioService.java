@@ -46,7 +46,7 @@ public class UsuarioService {
             Usuario usuario = new Usuario(0, name, email, password);
             usuario.setEstudiante(true);
             usuario.setCodigoEstudiante(codigoEstudiante);
-            repository.guardar(usuario);
+            repository.guardarEstudiante(usuario);
             return "<p style='color: #27ae60; font-weight: bold;'>Estudiante creado: ID=" + usuario.getId() + ", Nombre=" + usuario.getName() + ", Email=" + usuario.getEmail() + ", Código=" + usuario.getCodigoEstudiante() + "</p>";
         } catch (IllegalArgumentException e) {
             return "<p style='color: #e74c3c; font-weight: bold;'>⚠️ Regla de Negocio: " + e.getMessage() + "</p>";
