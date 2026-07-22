@@ -178,7 +178,16 @@ public class PagoService {
             if ("PAGADO".equalsIgnoreCase(result.status)) {
                 pago.setEstado("completado");
                 repository.actualizar(pago);
+
+                // Actualizar estado de la cuota a pagado
+                Cuota cuota = cuotaRepository.obtenerPorId(pago.getCuotaId());
+                if (cuota != null) {
+                    cuota.setEstado("pagado");
+                    cuotaRepository.actualizar(cuota);
+                }
+
                 html.append("<p class='pagado'>✅ Pago CONFIRMADO - Estado actualizado a 'completado'</p>\n");
+                html.append("<p><label>Cuota:</label> ").append(cuota != null ? cuota.getDescripcion() + " → pagado" : "ID " + pago.getCuotaId()).append("</p>\n");
                 html.append("<p><label>Pagador:</label> ").append(result.payerName != null ? result.payerName : "").append("</p>\n");
                 html.append("<p><label>Banco:</label> ").append(result.payerBank != null ? result.payerBank : "").append("</p>\n");
                 html.append("<p><label>Observaciones:</label> Confirmado mediante consulta a PagoFácil API" +
